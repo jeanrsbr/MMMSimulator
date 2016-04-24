@@ -59,6 +59,10 @@ public class Predicoes {
                 double stopGain = Double.parseDouble(line[3].replaceAll(",", "."));
                 double stopLoss = Double.parseDouble(line[4].replaceAll(",", "."));
 
+                if (prioridade != 1){
+                    continue;
+                }                
+                
                 //Inclui no HashMAP
                 predicoes.put(date, new TransacaoPredita(prioridade, date, ativo, stopGain, stopLoss));
 

@@ -4,9 +4,9 @@
  */
 package MMMSimulator.MERCADO;
 
-import MMMSimulator.PREDICOES.TransacaoPredita;
 import MMMSimulator.SimuladorConstants;
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -24,8 +24,20 @@ public class Mercado {
 
     }
 
-
-
+    //Obtém o preço de abertura do ativo
+    public double getPrecoAbertura(String ativo, Date date) throws AtivoException{
+        return ativos.get(ativo).getPrecoAbertura(date);        
+    }    
+    
+    //Verifica se o ativo alcançou o Stop LOSS ou Stop GAIN durante o dia
+    public double verificaStop(String ativo, Date date, double stopLoss, double stopGain){
+        return ativos.get(ativo).verificaStop(date, stopLoss, stopGain);
+    }
+    
+    public double getPrecoFechamento(String ativo, Date date) throws AtivoException{
+        return ativos.get(ativo).getPrecoFechamento(date);
+    }
+    
     //Cria mercado a partir dos dados do simulador
     private void populaMercado() throws AtivoException, MercadoException {
 
