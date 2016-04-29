@@ -4,43 +4,42 @@
  */
 package MMMSimulator.PREDICOES;
 
-import MMMSimulator.MISC.LeituraProperties;
 import MMMSimulator.SimuladorConstants;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.TreeMap;
 
 /**
  * Possui as predições do algoritmo SVM em um array
  */
 public class Predicoes {
 
-    private HashMap<Date, TransacaoPredita> predicoes;
+    private TreeMap<Date, TransacaoPredita> predicoes;
 
-    public Predicoes() {
-        predicoes = new HashMap<>();
+    public Predicoes() throws PredicoesException {
+        predicoes = new TreeMap<>();
         populaPredicoes();
     }
 
-    public HashMap<Date, TransacaoPredita> getPredicoes() {
+    public TreeMap<Date, TransacaoPredita> getPredicoes() {
         return predicoes;
     }
 
 
 
     //Popula o array de predições
-    private void populaPredicoes() {
+    private void populaPredicoes() throws PredicoesException {
 
         try {
             //Abre arquivo CSV
-            BufferedReader br = new BufferedReader(new FileReader(SimuladorConstants.SIMULADOR_FOLDER +
+            BufferedReader br = new BufferedReader(new FileReader(SimuladorConstants.PREDICOES_FOLDER +
                     SimuladorConstants.PREDICOES_NAME + SimuladorConstants.PREDICOES_EXT));
             //Descarta a primeira linha
             br.readLine();
 
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
             //Varre o arquivo
             while (true) {
@@ -69,7 +68,7 @@ public class Predicoes {
 
             }
         } catch (Exception ex) {
-
+            throw new PredicoesException("Não foi possível ler o arquivo de predições");
         }
 
     }

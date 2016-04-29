@@ -12,22 +12,22 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.SortedSet;
+import java.util.TreeMap;
 
 /**
  * Descrição da classe.
  */
 public class Ativo {
 
-    private String nomArq;
-    private String ativo;
-    private HashMap<Long, Cotacao> cotacoes;
+    private final String nomArq;
+    private final String ativo;
+    private final TreeMap<Long, Cotacao> cotacoes;
 
     public Ativo(String nomArq, String ativo) throws AtivoException {
         this.nomArq = nomArq;
         this.ativo = ativo;
-        cotacoes = new HashMap<>();
+        cotacoes = new TreeMap<>();
         populaCotacoes();
     }
 
@@ -105,12 +105,12 @@ public class Ativo {
             }
 
             //Se a cotação máxima do minuto ultrapassou o StopGain
-            if (cotacoes.get(chave).getHigh() > stopGain) {
+            if (cotacoes.get(chave).getHigh() >= stopGain) {
                 return cotacoes.get(chave).getHigh();
             }
 
             //Se a cotação mínima do minuto ultrapassou o StopLoss
-            if (cotacoes.get(chave).getLow() > stopLoss) {
+            if (cotacoes.get(chave).getLow() <= stopLoss) {
                 return cotacoes.get(chave).getLow();
             }
 

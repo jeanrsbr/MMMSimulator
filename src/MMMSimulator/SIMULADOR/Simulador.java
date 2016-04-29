@@ -7,8 +7,10 @@ package MMMSimulator.SIMULADOR;
 import MMMSimulator.CARTEIRA.Carteira;
 import MMMSimulator.MERCADO.AtivoException;
 import MMMSimulator.MERCADO.Mercado;
+import MMMSimulator.MERCADO.MercadoException;
 import MMMSimulator.PREDICOES.Predicoes;
 import MMMSimulator.PREDICOES.TransacaoPredita;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.SortedSet;
 
@@ -28,11 +30,12 @@ public class Simulador {
     }
 
     //Simula as transações indicadas no algoritmo
-    public void simulaTransacoes() throws AtivoException{
+    public void simulaTransacoes() throws AtivoException, MercadoException{
 
         //Chaves de predições
         SortedSet<Date> chaves = (SortedSet<Date>) predicoes.getPredicoes().keySet();
 
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         //Varre as predições
         for (Date chave : chaves){
             
@@ -40,16 +43,24 @@ public class Simulador {
             TransacaoPredita predita = predicoes.getPredicoes().get(chave);
                      
             //Indica que irá simular a transação
-            System.out.println("Predição:" + predita.getAtivo() + " Data:" + predita.getDate() + " StopGain:" + predita.getStopGain() + " StopLoss:" + predita.getStopLoss());
+            System.out.println("Predição:" + predita.getAtivo() + " Data:" + formatter.format(predita.getDate()) + " StopGain:" + predita.getStopGain());
             
             carteira.addDiasPreditos();
             
             double precoAbertura = mercado.getPrecoAbertura(predita.getAtivo(), predita.getDate());
-            //Se o StopLoss for menor que o preço de abertura, nem realizará a transação
-            if (predita.getStopLoss() <= precoAbertura){
-                System.out.println("Transação não foi executada o preço de abertura é menor que o STOPLOSS");
-                continue;
+            
+            
+            System.out.println("Preço de abertura:" + precoAbertura);
+            
+            if (precoAbertura > predita.getStopGain()){
+                System.out.println("Transação não foi executada o preço de abertura(" + precoAbertura + ") é maior que o STOPGAIN");
+                continue;                
             }
+            
+            
+            //Calcula o valor de Stop
+            double stopLoss = precoAbertura - ((predita.getStopGain() - precoAbertura) * 0.2667);
+            
             //Calcula o preço do lote de ações
             double precoLote = precoAbertura * 100;
             //Quantidade de Lotes a serem comprados
@@ -61,10 +72,10 @@ public class Simulador {
             
             //Indica que houve movimentação no dia
             carteira.addMovimentacao();
-            System.out.println("Foram comprados " + qtdLotesCompras + " de ações ao preço de " + precoAbertura + ".");
+            System.out.println("Foram comprados " + qtdLotesCompras + " lotes de ações ao preço de " + precoAbertura + " cada.");
             
             //Verifica se houve stop
-            double stop = mercado.verificaStop(predita.getAtivo(), chave, predita.getStopLoss(), predita.getStopGain());
+            double stop = mercado.verificaStop(predita.getAtivo(), chave, stopLoss, predita.getStopGain());
             //Se ultrapassou o Stop GAIN ou Stop LOSS
             if (stop != 0d ){
                 System.out.println("Ocorreu Stop no meio do dia, ao preço de " + stop + ".");

@@ -20,7 +20,7 @@ public class Carteira {
     private final double valorCorretagem;
 
     public Carteira() throws CarteiraException {
-        capitalInicial = LeituraProperties.getInstance().leituraPropertiesDouble("prop.capital");
+        capitalInicial = capitalAtual = LeituraProperties.getInstance().leituraPropertiesDouble("prop.capital");
         valorCorretagem = LeituraProperties.getInstance().leituraPropertiesDouble("prop.valorCorretagem");
         //Se não foi informado capital inicial
         if (capitalInicial == 0){

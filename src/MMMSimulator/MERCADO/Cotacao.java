@@ -11,12 +11,12 @@ import java.util.Date;
  */
 public class Cotacao {
 
-    private long timeStamp;
-    private Date date;
-    private double open;
-    private double high;
-    private double low;
-    private double close;
+    private final long timeStamp;
+    private final Date date;
+    private final double open;
+    private final double high;
+    private final double low;
+    private final double close;
 
     public Cotacao(long timeStamp, Date date, double open, double high, double low, double close) {
         this.timeStamp = timeStamp;

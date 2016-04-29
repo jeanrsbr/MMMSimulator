@@ -25,7 +25,11 @@ public class Mercado {
     }
 
     //Obtém o preço de abertura do ativo
-    public double getPrecoAbertura(String ativo, Date date) throws AtivoException{
+    public double getPrecoAbertura(String ativo, Date date) throws AtivoException, MercadoException {
+        //Se não existem dados de simulação para o ativo
+        if (ativos.get(ativo) == null){
+            throw new MercadoException("O ativo " + ativo + " não possui dados para simulação");
+        }        
         return ativos.get(ativo).getPrecoAbertura(date);        
     }    
     

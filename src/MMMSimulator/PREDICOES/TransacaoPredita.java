@@ -43,9 +43,4 @@ public class TransacaoPredita {
         return stopGain;
     }
 
-    public double getStopLoss() {
-        return stopLoss;
-    }
-
-
 }

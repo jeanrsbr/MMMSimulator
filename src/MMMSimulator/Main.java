@@ -10,6 +10,8 @@ import MMMSimulator.MERCADO.AtivoException;
 import MMMSimulator.MERCADO.Mercado;
 import MMMSimulator.MERCADO.MercadoException;
 import MMMSimulator.PREDICOES.Predicoes;
+import MMMSimulator.PREDICOES.PredicoesException;
+import MMMSimulator.SIMULADOR.Simulador;
 import java.io.File;
 
 /**
@@ -30,18 +32,21 @@ public class Main {
 
         try {
 
-
             Mercado mercado = new Mercado();
             Carteira carteira = new Carteira();
             Predicoes predicoes = new Predicoes();
-
+            
+            
             
 
-        } catch (MercadoException | AtivoException | CarteiraException ex) {
+            //Cria instância do simulador
+            Simulador simulador = new Simulador(carteira, mercado, predicoes);
+            simulador.simulaTransacoes();
+
+        } catch (MercadoException | AtivoException | CarteiraException | PredicoesException ex) {
             ex.getMessage();
             ex.printStackTrace();
         }
-
     }
 
 }
