@@ -14,9 +14,13 @@ public class Carteira {
     private int diasPreditos;
     private int totalMovimentacoes;
     private final double capitalInicial;
+    private double capitalInicialMes;
     private double capitalAtual;
     private double totalDeIRRF;
+    private double totalDeIRRFMes;
     private double totalDeCorretagem;
+    private int operaçõesComLucro;
+    private int operaçõesComPrejuízo;
     private final double valorCorretagem;
 
     public Carteira() throws CarteiraException {
@@ -26,8 +30,27 @@ public class Carteira {
         if (capitalInicial == 0){
             throw new CarteiraException("Não foi informado capital inicial para a simulação");
         }
-
+        capitalInicialMes = capitalInicial;
     }
+    
+    //Fecha a carteira para o mês
+    public void apuraMes(){
+        
+        double resultado = capitalAtual - capitalInicialMes;
+        resultado += totalDeIRRFMes;
+        
+        //Se houve lucro
+        if (resultado > 0){
+            //Encontra o valor do IRRF do mês
+            double iRRF = resultado * 0.20;
+            totalDeIRRF += iRRF;
+            //Desconta o IRRF do período do capital
+            capitalAtual -= iRRF; 
+        }
+        capitalInicialMes = capitalAtual;
+        totalDeIRRFMes = 0d;
+    }
+    
     
     //Movimenta os valores da carteira
     public void movimentaCarteira(double valorComprado, double valorVendido){
@@ -35,9 +58,12 @@ public class Carteira {
         double resultado =  valorVendido - valorComprado;
         //Se houve lucro
         if (resultado > 0){
-            double iRRF = resultado * 0.20;
+            double iRRF = resultado * 0.01;
             capitalAtual = capitalAtual - iRRF;
-            totalDeIRRF = totalDeIRRF + iRRF;
+            totalDeIRRFMes = totalDeIRRFMes + iRRF;
+            operaçõesComLucro++;
+        } else {
+            operaçõesComPrejuízo++;
         }
         totalDeCorretagem = totalDeCorretagem + valorCorretagem;
         capitalAtual = capitalAtual - valorCorretagem;        
@@ -68,5 +94,23 @@ public class Carteira {
     public int getDiasPreditos() {
         return diasPreditos;
     }
+
+    public double getTotalDeIRRF() {
+        return totalDeIRRF;
+    }
+
+    public double getTotalDeCorretagem() {
+        return totalDeCorretagem;
+    }
+
+    public int getOperaçõesComLucro() {
+        return operaçõesComLucro;
+    }
+
+    public int getOperaçõesComPrejuízo() {
+        return operaçõesComPrejuízo;
+    }
+    
+    
 
 }
